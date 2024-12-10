@@ -16,6 +16,12 @@ export class UsersController {
         return this.usersService.getUsers(page)
     }
 
+    @Get('/search')
+    getProfiles(@Query('query') query: string) {
+        console.log(query)
+        return this.usersService.search(query)
+    }
+
     @Get(':id')
     getUser(@Param() id: number) {
         return this.usersService.getUser(id)
@@ -38,6 +44,7 @@ export class UsersController {
     deleteUser(@Param('id', ParseIntPipe) id: number){
         return this.usersService.deleteUser(id)
     }
+
 
 
   

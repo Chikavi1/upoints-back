@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { createUserDto } from './dto/create-user.dto'
 import { updateUserDto } from './dto/update-user.dto';
 import { createProfileDto } from './dto/create-profile.dto';
@@ -34,6 +34,19 @@ export class UsersService {
 
         const newUser = this.userRepository.create(user)
         return this.userRepository.save(newUser)
+    }
+
+
+    async search(query: string) {
+        const result = await this.userRepository.find({
+            where: [
+                { email: Like(`%${query}%`) },
+                { phone: Like(`%${query}%`)  }
+            ],
+            order: { name: 'ASC' },
+            take: 5
+        });
+        return result;
     }
 
    async getUsers(page: number){
