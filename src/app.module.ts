@@ -9,17 +9,18 @@ import { BusinessModule } from './business/business.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { GiftCardModule } from './gift-card/gift-card.module';
   
- 
+ import { StripeModule } from './stripe/stripe.module';
+
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'upoints',
+      port: 3307,
+      username: 'nest_user',
+      password: 'nest_password',
+      database: 'nestjs_db',
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,  
     
@@ -29,7 +30,9 @@ import { GiftCardModule } from './gift-card/gift-card.module';
     VisitsModule,
     BusinessModule,
     NotificationsModule,
+    StripeModule,
     GiftCardModule],
+    
   controllers: [AppController],
   providers: [AppService],
 })

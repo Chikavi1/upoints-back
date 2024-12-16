@@ -14,15 +14,18 @@ export class VisitsService {
 
   // Crear una nueva visita
   async create(createVisitDto: CreateVisitDto): Promise<Visit> {
-    const visit = this.visitRepository.create(createVisitDto); 
-    return this.visitRepository.save(visit);  
+     const visit = this.visitRepository.create(createVisitDto); 
+     return this.visitRepository.save(visit);  
   }
 
   // Obtener todas las visitas
-  async findAll(): Promise<Visit[]> {
-    return this.visitRepository.find();  
-  }
-
+async findAll(): Promise<Visit[]> {
+  return this.visitRepository.find({
+    relations: ['user', 'business'],
+    // where: { businessId: 1 },
+  });
+}
+  
   // Obtener una visita por su ID
   async findOne(id: number): Promise<Visit> {
     const visit = await this.visitRepository.findOne({ where: { id } });

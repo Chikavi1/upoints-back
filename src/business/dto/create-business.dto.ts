@@ -20,7 +20,8 @@ export class CreateBusinessDto {
   @IsNotEmpty()
   email: string;  
 
-  @IsPhoneNumber(null)
+  @IsString()
+  @IsOptional()
   @IsOptional()
   phone?: string;  
 
