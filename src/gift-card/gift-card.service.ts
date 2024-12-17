@@ -18,6 +18,16 @@ export class GiftCardService {
     return this.giftCardRepository.save(giftCard);  
   }
 
+  generateCode(): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      code += characters.charAt(randomIndex);
+    }
+    return code;
+  }
+
   // Obtener todas las tarjetas de regalo
   async findAll(): Promise<GiftCard[]> {
     return this.giftCardRepository.find(); 

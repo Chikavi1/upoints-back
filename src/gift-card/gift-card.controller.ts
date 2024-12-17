@@ -9,6 +9,11 @@ export class GiftCardController {
 
   @Post()
   create(@Body() createGiftCardDto: CreateGiftCardDto) {
+    const data = 
+    { 
+      code: this.giftCardService.generateCode(),
+      expiryDate: new Date(),
+    }
     return this.giftCardService.create(createGiftCardDto);
   }
 
