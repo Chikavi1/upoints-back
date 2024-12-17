@@ -1,4 +1,4 @@
-import { IsBoolean, IsDecimal, IsString } from "class-validator";
+import { IsBoolean, IsDecimal, IsEmail, IsString } from "class-validator";
 
 export class CreateGiftCardDto {
     @IsString()
@@ -9,4 +9,9 @@ export class CreateGiftCardDto {
   
     @IsBoolean()
     isActive: boolean;
+  
+    @IsEmail({}, { message: 'El correo electrónico no es válido' })
+    email: string;
+  
+  
   }

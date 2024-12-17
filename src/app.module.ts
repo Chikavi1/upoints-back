@@ -9,7 +9,10 @@ import { BusinessModule } from './business/business.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { GiftCardModule } from './gift-card/gift-card.module';
   
- import { StripeModule } from './stripe/stripe.module';
+import { StripeModule } from './stripe/stripe.module';
+import { MailModule } from './mail/email/email.module';
+import { MailController } from './mail/email/email.controller';
+import { AuthModule } from './auth/auth/auth.module';
 
 
 @Module({
@@ -31,9 +34,12 @@ import { GiftCardModule } from './gift-card/gift-card.module';
     BusinessModule,
     NotificationsModule,
     StripeModule,
-    GiftCardModule],
+    GiftCardModule,
+    MailModule,
+    AuthModule
+  ],
     
-  controllers: [AppController],
+  controllers: [AppController,MailController],
   providers: [AppService],
 })
 export class AppModule {}

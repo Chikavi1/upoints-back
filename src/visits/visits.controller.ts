@@ -9,8 +9,15 @@ export class VisitsController {
 
   @Post()
   create(@Body() createVisitDto: CreateVisitDto) {
-    return this.visitsService.create(createVisitDto);
-  }
+
+  const infoUpdate = { 
+    ...createVisitDto,
+    user: createVisitDto.userId, 
+    business:   createVisitDto.businessId,
+    date: new Date() 
+  };
+  return this.visitsService.create(infoUpdate);
+}
 
   @Get()
   findAll() {

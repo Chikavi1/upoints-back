@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { StripeService } from './stripe.service';
+import { AuthGuard } from '@nestjs/passport';
  
 
 @Controller('stripe')
@@ -7,10 +8,11 @@ export class StripeController {
 
     constructor(private stripeService: StripeService){}
     
-
+    @UseGuards(AuthGuard('jwt'))
     @Get('webhook')
     async webhook(@Body() body: any) {
       console.log('hola mundo');
+      return 'hola mundo';
     //   return this.stripeService.handleWebhook(body);
     }
 

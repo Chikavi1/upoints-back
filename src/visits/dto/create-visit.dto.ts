@@ -1,17 +1,17 @@
+import { IsOptional, IsInt, IsNumber, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
-import { IsOptional, IsDate, IsInt, IsNumber } from 'class-validator';
 
 export class CreateVisitDto {
+  @IsInt()
+  userId: any;
+
+  @IsInt()
+  businessId: any;
+
   @IsOptional()
   @IsDate()
   @Type(() => Date) 
   date?: Date;
-
-  @IsInt()
-  userId?: number;
-
-  @IsInt()
-  businessId?: number;
 
   @IsOptional()
   @IsInt()
