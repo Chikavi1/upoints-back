@@ -19,12 +19,25 @@ export class VisitsService {
   }
 
   // Obtener todas las visitas
-async findAll(): Promise<Visit[]> {
-  return this.visitRepository.find({
+async findAll(page: number = 1, limit: number = 10): Promise<{ data: Visit[]; pagination: any }> {
+  const [data, total] = await this.visitRepository.findAndCount({
     relations: ['user', 'business'],
-    // where: { businessId: 1 },
+    take: limit,
+    skip: (page - 1) * limit,
+    order: { createdAt: 'DESC' },
   });
+
+  return {
+    data,
+    pagination: {
+      totalItems: total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      limit,
+    },
+  };
 }
+
   
   // Obtener una visita por su ID
   async findOne(id: number): Promise<Visit> {

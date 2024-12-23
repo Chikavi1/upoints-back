@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { VisitsService } from './visits.service';
 import { CreateVisitDto } from './dto/create-visit.dto';
 import { UpdateVisitDto } from './dto/update-visit.dto';
+import { Visit } from './visit.entity';
 
 @Controller('visits')
 export class VisitsController {
@@ -20,8 +21,14 @@ export class VisitsController {
 }
 
   @Get()
-  findAll() {
-    return this.visitsService.findAll();
+  async findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<{ data: Visit[]; pagination: any }> {
+
+    console.log(page,limit)
+
+    return this.visitsService.findAll(page, limit);
   }
 
   @Get(':id')
