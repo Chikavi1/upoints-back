@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { GiftCard } from './gift-card.entity';  
 import { CreateGiftCardDto } from './dto/create-gift-card.dto';
 import { UpdateGiftCardDto } from './dto/update-gift-card.dto';
@@ -28,11 +28,35 @@ export class GiftCardService {
     return code;
   }
 
-  // Obtener todas las tarjetas de regalo
-  async findAll(): Promise<GiftCard[]> {
-    return this.giftCardRepository.find(); 
+   searchGiftCards(query: string) {
+    return this.giftCardRepository.find({
+        where: [
+          { email: ILike(`%${query}%`) },
+        ],
+      });
   }
 
+  async findAll(page: number = 1, limit: number = 10): Promise<{ data: GiftCard[]; pagination: any }> {
+    
+    console.log(page, limit)
+    
+  const [data, total] = await this.giftCardRepository.findAndCount({
+    relations: ['user', 'business'],
+    take: limit,
+    skip: (page - 1) * limit,
+    order: { createdAt: 'DESC' },
+  });
+
+  return {
+    data,
+    pagination: {
+      totalItems: total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      limit,
+    },
+  };
+}
   // Obtener una tarjeta de regalo por su ID
   async findOne(id: number): Promise<GiftCard> {
     const giftCard = await this.giftCardRepository.findOne({ where: { id } });

@@ -16,19 +16,30 @@ export class GiftCard {
   @JoinColumn({ name: 'user_id' })
   user: User; 
 
-  @Column({ unique: true })
-  code: string;  
-
+  @Column({ length: 100 })
+  name: string;
+  
   @Column()
   email: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
   amount: number; 
 
-  @Column()
-  expiryDate: Date;   
+  @Column('decimal', { precision: 10, scale: 2,default: 0 })
+  amount_spent: number;
+  
 
-  @Column({ length: 20 })
+  @Column('date')
+  date_delivery: Date;
+
+  @Column('text')
+  message: string;
+
+  @Column({ unique: true })
+  code: string;  
+
+
+  @Column({ length: 20, default: 'pending' })
   status: string; 
 
   @CreateDateColumn()
