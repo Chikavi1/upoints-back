@@ -56,11 +56,18 @@ export class GiftCardController {
     return this.giftCardService.remove(+id);
   }
 
+  @Post('pay')
+  payment(@Body() request:Request) {
+    console.log(request);
+    
+    return this.giftCardService.pay(request);
+  }
 
-  @Cron(CronExpression.EVERY_MINUTE)  
-  async checkScheduledEmails() {
 
-    console.log('se ejecuta esta wea')
+  // @Cron(CronExpression.EVERY_MINUTE)  
+  // async checkScheduledEmails() {
+
+  //   console.log('se ejecuta esta wea')
     
     // const emails = await this.emailRepository.find({
     //   where: { sent: false, scheduledDate: LessThanOrEqual(new Date()) },
@@ -71,7 +78,7 @@ export class GiftCardController {
     //   email.sent = true;
     //   await this.emailRepository.save(email);
     // }
-  }
+  // }
 
 
 }

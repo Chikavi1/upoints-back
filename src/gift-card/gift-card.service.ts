@@ -57,7 +57,8 @@ export class GiftCardService {
     },
   };
 }
-  // Obtener una tarjeta de regalo por su ID
+ 
+  
   async findOne(id: number): Promise<GiftCard> {
     const giftCard = await this.giftCardRepository.findOne({ where: { id } });
     if (!giftCard) {
@@ -66,7 +67,7 @@ export class GiftCardService {
     return giftCard;
   }
 
-  // Actualizar una tarjeta de regalo
+ 
   async update(id: number, updateGiftCardDto: UpdateGiftCardDto): Promise<GiftCard> {
     const giftCard = await this.giftCardRepository.findOne({ where: { id } });
     if (!giftCard) {
@@ -76,14 +77,21 @@ export class GiftCardService {
      const updatedGiftCard = Object.assign(giftCard, updateGiftCardDto);
     return this.giftCardRepository.save(updatedGiftCard);  
   }
-
-  // Eliminar una tarjeta de regalo
+ 
   async remove(id: number): Promise<void> {
     const giftCard = await this.giftCardRepository.findOne({ where: { id } });
     if (!giftCard) {
        throw new NotFoundException(`GiftCard with ID ${id} not found`);
     }
-
      await this.giftCardRepository.remove(giftCard);
+  }
+
+
+  async pay(data) {
+
+    console.log(data)
+
+
+    const giftCard = this.giftCardRepository.create(data);  
   }
 }
