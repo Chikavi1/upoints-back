@@ -4,16 +4,19 @@ import { ILike, Repository } from 'typeorm';
 import { GiftCard } from './gift-card.entity';  
 import { CreateGiftCardDto } from './dto/create-gift-card.dto';
 import { UpdateGiftCardDto } from './dto/update-gift-card.dto';
+import { StripeService } from '../stripe/stripe.service';
+import { MailService } from 'src/mail/email/email.service';
 
 @Injectable()
 export class GiftCardService {
   constructor(
     @InjectRepository(GiftCard)
     private readonly giftCardRepository: Repository<GiftCard>,  
+    private readonly emailService: MailService,
+    private readonly StripeService: StripeService,
   ) {}
 
-  // Crear una nueva tarjeta de regalo
-  async create(createGiftCardDto: CreateGiftCardDto): Promise<GiftCard> {
+   async create(createGiftCardDto: CreateGiftCardDto): Promise<GiftCard> {
     const giftCard = this.giftCardRepository.create(createGiftCardDto);  
     return this.giftCardRepository.save(giftCard);  
   }
@@ -87,11 +90,51 @@ export class GiftCardService {
   }
 
 
-  async pay(data) {
-
-    console.log(data)
-
-
-    const giftCard = this.giftCardRepository.create(data);  
+ async pay(data: any) {
+    const paymentResult = await this.processPayment(data);
+    if (!paymentResult.success) {
+      throw new Error('Payment failed: ' + paymentResult.error);
+    }
+    await this.createGiftCardRecords(data.items,data.email);
+    await this.sendEmails(data.items);
+    return { success: true, message: 'Payment processed and emails sent successfully.' };
+ }
+  
+  
+  private async processPayment(data: any) {
+    try {      
+      const paymentResponse = await this.StripeService.createPaymentIntent(data.token, data.total, data.currency)
+      return { success: true, paymentResponse };
+    }catch (error) {
+      return { success: false, error: error.message };
+    }
   }
+
+  private async createGiftCardRecords(items: any[], emailFrom: string){
+     const giftCards = items.map(item => { 
+        item.email_from = emailFrom;
+        item.code = this.generateCode()
+      return this.giftCardRepository.create(item)
+    });
+    await this.giftCardRepository.save(giftCards.flat()); 
+  }
+
+  private async sendEmails(items: any[]) {
+    for (const item of items) {
+      await this.emailService.sendMail(
+        item.email,
+        'You have received a gift card!',
+        'no se',
+        `
+          <h1>You've received a gift card!</h1>
+          <img src="${item.image}" alt="Gift Card Image" />
+          <p><strong>From:</strong> ${item.name}</p>
+          <p><strong>Message:</strong> ${item.message}</p>
+        `,
+      );
+
+    }
+  }
+
+  
 }

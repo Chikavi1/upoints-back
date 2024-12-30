@@ -24,12 +24,12 @@ export class StripeService {
   }
 
     
-  async createPaymentIntent(amount: number, currency: string) {
-    return this.stripe.paymentIntents.create({
-      amount,
-      currency,
-    });
-  }
+  // async createPaymentIntent(amount: number, currency: string) {
+  //   return this.stripe.paymentIntents.create({
+  //     amount,
+  //     currency,
+  //   });
+  // }
     
 
   async retrievePaymentIntent(id: string) {
@@ -59,6 +59,56 @@ export class StripeService {
     }
   }
  
+  async charge(data) {
+   console.log('data del service de stripe charge: ',data)
+
+     try {
+       const token = await this.stripe.tokens.create({
+        card: {
+          number: data.source.number.replace(/\s+/g, ''),  
+          exp_month: data.source.exp_month,
+          exp_year: data.source.exp_year,
+          cvc: data.source.cvc,
+        },
+      });
+
+       const charge = await this.stripe.charges.create({
+        amount: Math.round(data.total * 100),  
+        currency: data.currency,
+        source: token.id,  
+        description: 'Cobro por tarjeta de regalo',
+      });
+
+      return charge;  
+    } catch (error) {
+      console.error('Error procesando el pago:', error);
+      throw new Error('Payment failed: ' + error.message);
+    }
+  
+  }
+
+async createPaymentIntent(token: string, amount: number, currency: string) {
+  try {
+    console.log(amount);
+
+    console.log(token, amount, currency)
+
+    const charge = await this.stripe.charges.create({
+      amount: amount*100,
+      currency,
+      description: 'Example charge',
+      source: token,
+    });
+
+    return charge;
+  } catch (error) {
+    throw new Error(`Payment failed: ${error.message}`);
+  }
+}
+
+
+
+
 
 }
 

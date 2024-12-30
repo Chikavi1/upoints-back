@@ -8,15 +8,19 @@ export class GiftCard {
   @PrimaryGeneratedColumn()
   id: number;  
 
-  @ManyToOne(() => Business, (business) => business.giftCards)
-  @JoinColumn({ name: 'business_id' })
+  // @ManyToOne(() => Business, (business) => business.giftCards)
+  // @JoinColumn({ name: 'business_id' })
+  // business: Business;  
+
+  @ManyToOne(() => Business, (business) => business.giftCards, { eager: true })
   business: Business;  
+
 
   @ManyToOne(() => User, (user) => user.giftCards, { nullable: true })
   @JoinColumn({ name: 'user_id' })
   user: User; 
 
-  @Column({ length: 100 })
+  @Column({ type: 'varchar', nullable: false }) // NOT NULL
   name: string;
   
   @Column()
@@ -28,9 +32,8 @@ export class GiftCard {
   @Column('decimal', { precision: 10, scale: 2,default: 0 })
   amount_spent: number;
   
-
-  @Column('date')
-  date_delivery: Date;
+ @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  date_delivery: Date; // Fecha de la visita
 
   @Column('text')
   message: string;
@@ -38,9 +41,14 @@ export class GiftCard {
   @Column({ unique: true })
   code: string;  
 
-
   @Column({ length: 20, default: 'pending' })
   status: string; 
+
+  @Column()
+  image: string;
+
+  @Column()
+  email_from: string;
 
   @CreateDateColumn()
   createdAt: Date;  

@@ -4,6 +4,7 @@ import { CreateGiftCardDto } from './dto/create-gift-card.dto';
 import { UpdateGiftCardDto } from './dto/update-gift-card.dto';
 import { GiftCard } from './gift-card.entity';
 import { CronExpression, Cron } from '@nestjs/schedule';
+import { CreatePaymentDto } from './dto/payment-card.dto';
  
 @Controller('gift-card')
 export class GiftCardController {
@@ -57,10 +58,8 @@ export class GiftCardController {
   }
 
   @Post('pay')
-  payment(@Body() request:Request) {
-    console.log(request);
-    
-    return this.giftCardService.pay(request);
+  payment(@Body() createGiftCardDto: any) {
+    return this.giftCardService.pay(createGiftCardDto);
   }
 
 
