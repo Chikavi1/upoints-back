@@ -23,13 +23,14 @@ import { ScheduleModule } from '@nestjs/schedule';
       type: 'mysql',
       host: 'localhost',
       port: 3307,
-      username: 'nest_user',
-      password: 'nest_password',
-      database: 'nestjs_db',
+      username: 'root',
+      password: 'root',
+      database: 'upoints',
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,  
     
     }),
+    AuthModule,
     UsersModule,
     PostsModule,
     VisitsModule,
@@ -37,8 +38,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     NotificationsModule,
     StripeModule,
     GiftCardModule,
-    MailModule,
-    AuthModule
+    MailModule,    
   ],
     
   controllers: [AppController,MailController],
